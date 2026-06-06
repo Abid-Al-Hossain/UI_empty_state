@@ -27,11 +27,16 @@ export type EmptyStateState = {
   previewState: "default" | "hover" | "focus" | "active" | "open" | "closed" | "selected" | "loading" | "empty" | "error" | "success";
   motion: boolean;
   disabled: boolean;
-  role: "region" | "group" | "status" | "alert" | "dialog" | "menu" | "menubar" | "navigation" | "list" | "tree" | "table" | "tablist" | "form" | "textbox" | "img" | "application";
-  illustration: string;
-  stateMode: string;
+  role: "region" | "status" | "alert";
+  illustration: "spark" | "inbox" | "search" | "chart" | "lock";
+  stateMode: "no-data" | "no-results" | "offline" | "permission" | "success";
+  statusVariant: "neutral" | "info" | "warning" | "success";
   showPrimaryAction: boolean;
   showSecondaryAction: boolean;
+  primaryActionLabel: string;
+  secondaryActionLabel: string;
+  suggestions: string[];
+  resources: string[];
   layoutMode: "centered" | "sidebar" | "grouped" | "inline" | "stacked";
 };
 

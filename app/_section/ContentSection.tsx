@@ -1,10 +1,15 @@
 "use client";
 
 import { SectionCard } from "@/components/shared/layout/SectionCard";
+import Input from "@/components/shared/input/Input";
+import Switch from "@/components/shared/input/Switch";
 import type { EmptyStateState } from "../types";
 
 type Props = { state: EmptyStateState; update: <K extends keyof EmptyStateState>(key: K, value: EmptyStateState[K]) => void };
 
 export default function ContentSection({ state, update }: Props) {
-  return <SectionCard title="Content" subtitle="Content controls for native empty generation."><div className="rounded-2xl border p-4 text-sm" style={{ borderColor: "var(--border)", color: "var(--muted)" }}>No separate native controls are needed for this section in this component.</div></SectionCard>;
+  return <SectionCard title="Content" subtitle="Action content for native empty generation."><Input label="Primary action" value={state.primaryActionLabel} onChange={(value) => update("primaryActionLabel", value)} />
+<Switch label="Show primary action" checked={state.showPrimaryAction} onChange={(value) => update("showPrimaryAction", value)} />
+<Input label="Secondary action" value={state.secondaryActionLabel} onChange={(value) => update("secondaryActionLabel", value)} />
+<Switch label="Show secondary action" checked={state.showSecondaryAction} onChange={(value) => update("showSecondaryAction", value)} /></SectionCard>;
 }
