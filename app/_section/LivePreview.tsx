@@ -47,7 +47,7 @@ export default function LivePreview({ state }: { state: EmptyStateState }) {
       style={shell(state)}
       className={`${layoutClass} content-center`}
     >
-      <div className="grid max-w-xl gap-4" style={{ gap: state.gap }}>
+      <div className="grid max-w-xl gap-4" style={{ gap: state.gap, transition: state.motion ? "opacity 0.25s ease, transform 0.25s ease" : "none" }}>
         <div
           aria-hidden="true"
           className="grid size-20 place-items-center rounded-3xl border"
