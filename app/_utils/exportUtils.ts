@@ -45,7 +45,7 @@ export default function EmptyStateComponent() {
 
   return (
     <section id={state.id} role={state.role} aria-label={state.ariaLabel} aria-live={liveMode} aria-atomic={liveMode ? true : undefined} tabIndex={state.tabIndex} style={shellStyle}>
-      <div style={{ display: "grid", gap: state.gap, maxWidth: 560, transition: state.motion ? "opacity 0.25s ease, transform 0.25s ease" : "none" }}>
+      <div style={{ display: "grid", gap: state.gap, maxWidth: 560, transition: state.transitionDuration > 0 ? "$1" : "none" }}>
         <div aria-hidden="true" style={{ display: "grid", placeItems: "center", width: 80, height: 80, borderRadius: 24, border: "1px solid " + state.border, background: state.accent + "22", color: state.accent }}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="40" height="40">
             <path d={illustrationPath(state.illustration)} />

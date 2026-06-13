@@ -2,6 +2,25 @@
 
 import type { CSSProperties } from "react";
 import type { EmptyStateState } from "../types";
+import { SYSTEM_FONTS } from "@/components/shared/typography/fontConstants";
+
+function resolveFont(state: { fontBucket: "system" | "google"; googleFontFamily: string; systemFontIdx: number }): string {
+  return state.fontBucket === "google"
+    ? `"${state.googleFontFamily}", sans-serif`
+    : (SYSTEM_FONTS[state.systemFontIdx]?.css ?? "inherit");
+}
+
+function buildShadow(state: { shadowEnabled: boolean; shadowX: number; shadowY: number; shadowBlur: number; shadowSpread: number; shadowColor: string; shadowOpacity: number }): string {
+  if (!state.shadowEnabled) return "none";
+  const hex = Math.round(state.shadowOpacity * 255).toString(16).padStart(2, "0");
+  return `${state.shadowX}px ${state.shadowY}px ${state.shadowBlur}px ${state.shadowSpread}px ${state.shadowColor}${hex}`;
+}
+
+function buildRadius(state: { radiusLinked: boolean; radius: number; radiusTL: number; radiusTR: number; radiusBR: number; radiusBL: number }): string {
+  return state.radiusLinked
+    ? `${state.radius}px`
+    : `${state.radiusTL}px ${state.radiusTR}px ${state.radiusBR}px ${state.radiusBL}px`;
+}
 
 function shell(state: EmptyStateState): CSSProperties {
   return {
@@ -9,12 +28,17 @@ function shell(state: EmptyStateState): CSSProperties {
     minHeight: state.height,
     padding: state.padding,
     gap: state.gap,
-    borderRadius: state.radius,
-    border: `${state.borderWidth}px solid ${state.border}`,
-    boxShadow: `0 ${Math.round(state.shadow / 3)}px ${state.shadow}px rgba(0,0,0,.28)`,
+    borderRadius: buildRadius(state),
+    border: `${state.borderWidth}px ${state.borderStyle} ${state.border}`,
+    boxShadow: buildShadow(state),
     background: state.background,
     color: state.foreground,
-    fontFamily: state.fontFamily,
+    fontFamily: resolveFont(state),
+    fontStyle: state.fontStyle,
+    textTransform: state.textTransform,
+    textDecoration: state.textDecoration,
+    letterSpacing: `${state.letterSpacing}${state.letterSpacingUnit}`,
+    lineHeight: state.lineHeight,
     opacity: state.disabled ? 0.55 : 1,
   };
 }
@@ -47,7 +71,7 @@ export default function LivePreview({ state }: { state: EmptyStateState }) {
       style={shell(state)}
       className={`${layoutClass} content-center`}
     >
-      <div className="grid max-w-xl gap-4" style={{ gap: state.gap, transition: state.motion ? "opacity 0.25s ease, transform 0.25s ease" : "none" }}>
+      <div className="grid max-w-xl gap-4" style={{ gap: state.gap, transition: state.transitionDuration > 0 ? "opacity 0.25s ease, transform 0.25s ease" : "none" }}>
         <div
           aria-hidden="true"
           className="grid size-20 place-items-center rounded-3xl border"
