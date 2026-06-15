@@ -10,6 +10,9 @@ export function buildReactCode(state: EmptyStateState) {
   return `import * as React from "react";
 
 const state = ${JSON.stringify(state, null, 2)};
+function resolveFont(s) { return s.fontBucket === "google" ? '"' + s.googleFontFamily + '", sans-serif' : "inherit"; }
+function buildShadow(s) { if (!s.shadowEnabled) return "none"; var hex = Math.round(s.shadowOpacity * 255).toString(16).padStart(2, "0"); return s.shadowX + "px " + s.shadowY + "px " + s.shadowBlur + "px " + s.shadowSpread + "px " + s.shadowColor + hex; }
+
 
 function illustrationPath(kind) {
   const icons = {
@@ -31,12 +34,13 @@ export default function EmptyStateComponent() {
     minHeight: state.height,
     padding: state.padding,
     borderRadius: state.radius,
-    border: state.borderWidth + "px solid " + state.border,
-    boxShadow: "0 " + Math.round(state.shadow / 3) + "px " + state.shadow + "px rgba(0,0,0,.28)",
+    border: state.borderWidth + "px " + state.borderStyle + " " + (state.disabled && state.disabledUseCustomColors ? state.disabledBorder : state.border),
+    boxShadow: buildShadow(state),
     background: state.background,
     color: state.foreground,
-    fontFamily: state.fontFamily,
-    opacity: state.disabled ? 0.55 : 1,
+    fontFamily: resolveFont(state),
+    opacity: state.disabled ? (state.disabledOpacity ?? 0.5) : 1,
+cursor: state.disabled ? state.disabledCursor : undefined,
     display: state.layoutMode === "inline" || state.layoutMode === "sidebar" ? "flex" : "grid",
     placeItems: state.layoutMode === "inline" || state.layoutMode === "sidebar" ? undefined : "center",
     gap: state.gap,
@@ -45,7 +49,7 @@ export default function EmptyStateComponent() {
 
   return (
     <section id={state.id} role={state.role} aria-label={state.ariaLabel} aria-live={liveMode} aria-atomic={liveMode ? true : undefined} tabIndex={state.tabIndex} style={shellStyle}>
-      <div style={{ display: "grid", gap: state.gap, maxWidth: 560, transition: state.transitionDuration > 0 ? "$1" : "none" }}>
+      <div style={{ display: "grid", gap: state.gap, maxWidth: 560, transition: state.transitionDuration > 0 ? "all " + state.transitionDuration + "ms " + state.transitionEasing : "none" }}>
         <div aria-hidden="true" style={{ display: "grid", placeItems: "center", width: 80, height: 80, borderRadius: 24, border: "1px solid " + state.border, background: state.accent + "22", color: state.accent }}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="40" height="40">
             <path d={illustrationPath(state.illustration)} />
